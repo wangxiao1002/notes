@@ -7,9 +7,9 @@ def change_day():
 def change_time(): 
   return datetime.timedelta(minutes=1) 
 
-now = datetime.datetime.now() 
-commit_date = (now.replace(year=now.year-1) + change_day()) 
-
+now = datetime.date(2020, 11, 1)
+commit_date = datetime.date(2019, 12, 6)
+ 
 while commit_date < now: 
   commit_date = commit_date + change_day() 
   for i in range(5): 
