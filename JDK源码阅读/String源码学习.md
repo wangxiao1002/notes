@@ -21,5 +21,12 @@
         this.value = original.value;
         this.hash = original.hash;
     }
+
+  /**
+    * char[] 为参数构造方法
+    */
+    public String(char value[]) {
+           this.value = Arrays.copyOf(value, value.length);
+       }
     
 ```
