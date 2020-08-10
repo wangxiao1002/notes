@@ -145,4 +145,11 @@ System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
     String str1 = new String("hello").intern();
     String str2 = "hello";
     System.out.println(str1==str2);//true
+
+    String str1 = new String("Java");
+    // 执行入池操作 但是与Str1 的Heap 空间已经没太大联系（不严谨） 
+    String str2 = str1.intern();
+    String str3 = "Java"
+    str1 !=  str2
+    str2 == str3
 ```
