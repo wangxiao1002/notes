@@ -1,4 +1,4 @@
-# nginx
+
 # Nginx 配置总结
 ## nginx 环境安装（个人推荐Docker安装）
 * 切换root (非root权限用户需要将命令添加)
