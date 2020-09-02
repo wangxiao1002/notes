@@ -13,4 +13,4 @@
 *  transient int modCount; HashMap结构修改次数
 *  transient int size; key-value 映射的大小
 *  int threshold; 扩容阈值 (capacity * load factor)容量×负载因子
-*  final float loadFactor; 转载因子
+*  final float loadFactor; 装载因子
