@@ -203,7 +203,39 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
  }
  
 ```
+*****
 
+## GET
+
+```java
+  public V get(Object key) {
+     Node<K,V> e;
+     return (e = getNode(hash(key), key)) == null ? null : e.value;
+  }
+  final Node<K,V> getNode(int hash, Object key) {
+        Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
+        // table 不为空且first 不为空
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+            (first = tab[(n - 1) & hash]) != null) {
+            if (first.hash == hash && // 判断第一节点
+                ((k = first.key) == key || (key != null && key.equals(k))))
+                return first;
+            if ((e = first.next) != null) {
+                // 判断是否是treee
+                if (first instanceof TreeNode)
+                    return ((TreeNode<K,V>)first).getTreeNode(hash, key);
+                do {
+                    // 循环判断
+                    if (e.hash == hash &&
+                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        return e;
+                } while ((e = e.next) != null);
+            }
+        }
+        return null;
+  }
+```
+*****
 
 
 
