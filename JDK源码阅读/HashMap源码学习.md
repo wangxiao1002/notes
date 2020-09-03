@@ -237,6 +237,26 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 ```
 *****
 
+## 其他重要方法
 
+* values： 返回所有V 的Collection
+
+* entrySet: 返回Set<Map.Entry<K,V>> ,常用于遍历
+
+* getOrDefault： 获取value获取不到赋一个默认值，并不会改变Map
+
+* putIfAbsent: 存在直接返回，不put,不存在和put 一样
+
+* V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)： 不存在则去函数里面的值，并put 类似 :
+```
+   Object key = map.get("key");
+  if (key == null) {
+    key = new Object();
+    map.put("key", key);
+  }
+```
+* computeIfPresent(K key,BiFunction<? super K, ? super V, ? extends V> remappingFunction) 同上存在则操作Map
+* compute 同上不管存不存在都会操作Map
+* V merge(K key, V value,BiFunction<? super V, ? super V, ? extends V> remappingFunction)  merge 它将新的值赋值到 key （如果不存在）或更新给定的key 值对应的 value
 
 
