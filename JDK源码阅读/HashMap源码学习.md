@@ -2,7 +2,7 @@
 ##  Hash 算法 
 *  指 将任意长度的输入通过Hash算法转换成固定长度的输出，这个输出的值就是Hash值
 ## HashMap 常见常量
-* 初始化容量：static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; 
+* 初始化Hash桶数量：static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; 
 * 最大容量：  static final int MAXIMUM_CAPACITY = 1 << 30;
 * 默认负载因子： static final float DEFAULT_LOAD_FACTOR = 0.75f; // 3/4
 * 数组转树 阈值（树化）：static final int TREEIFY_THRESHOLD = 8;
