@@ -8,14 +8,8 @@ port=22
 username="root"
 
 
-#hostname="47.93.53.213"
-#password='BJ-zdzhjy%(^@^$!!151617'
-
-hostname="test.luojigou.vip"
-password='gcQj@vJ0@p#*cUnk%#p%'
-
-#hostname="luojigou.vip"
-#password='JRn7o%kCRYm61I1DXku*'
+hostname="******"
+password='********'
 
 file_name="bw441-0.0.1.jar"
 ###################################################
