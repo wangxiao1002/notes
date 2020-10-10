@@ -37,3 +37,8 @@
         TERMINATED;
     }
 ```
+## 线程的工作流程
+* 首先创建线程，并指定业务代码，然后调用start()方法 线程状态由 NEW --->RUNNABLE 
+* 线程在调度执行过程中，首先判断是否有synchronized同步代码块，如果有并且其他线程正在占用该监视器，则进入BLOCKED状态，当锁释放则会继续执行
+* 当前线程遇到object.wait()或者thread.join()方法，但只会释放 object 这个对象的同步锁，线程进入WAITING/TIMED_WAITING状态
+* 当线程被Object.notify()/Object.notifyAll()唤醒后会自动继续执行接下来代码，一直到状态是TERMINATED
