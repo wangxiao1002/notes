@@ -64,3 +64,62 @@
 * 任务进来先判断是否有空闲的核心线程，有则执行 否则存入工作队列 
 * 判断是否可以存在工作队列中，能则存入工作队列 否存判断是否到达最大线程数
 * 到达最大线程数 执行拒绝策略，否则开始创建新线程执行
+
+## execute 执行任务
+```java
+  public void execute(Runnable command) {
+        // 检查任务
+        if (command == null)
+            throw new NullPointerException();
+        int c = ctl.get();
+        
+        // 判断是否大于核心线程数
+        if (workerCountOf(c) < corePoolSize) {
+            if (addWorker(command, true))
+                return;
+            c = ctl.get();
+        }
+
+        // 检查线程池是否处于运行状态，如果是则把任务添加到队列
+        if (isRunning(c) && workQueue.offer(command)) {
+            int recheck = ctl.get();
+            if (! isRunning(recheck) && remove(command))
+                reject(command);
+            else if (workerCountOf(recheck) == 0)
+                addWorker(null, false);
+        }
+        else if (!addWorker(command, false))
+            // 拒绝
+            reject(command);
+    }
+```
+## 拒绝策略
+* ThreadPoolExecutor.AbortPolicy()  终止策略，线程池会抛出异常并终止执行，它是默认的拒绝策略
+* CallerRunsPolicy，把任务交给当前线程来执行
+* DiscardPolicy，忽略此任务
+* DiscardOldestPolicy，忽略最早的任务
+* 自定义拒绝策略
+```java
+ new RejectedExecutionHandler() {
+            @Override
+            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                // 重写拒绝业务代码
+            }
+}
+```
+## beforeExecute() 和 afterExecute()  
+* 任务执行前和执行后
+```java
+public class MyThreadPoolExecutor extends ThreadPoolExecutor {
+    @Override
+    protected void beforeExecute(Thread t, Runnable r) {
+        super.beforeExecute(t, r);
+        // 开始执行  可以假如业务代码
+    }
+
+    @Override
+    protected void afterExecute(Runnable r, Throwable t) {
+        super.afterExecute(r, t);
+    }
+}
+```
