@@ -92,6 +92,16 @@
             // 拒绝
             reject(command);
     }
+
+```
+## submit 有返回值
+```java
+    public Future<?> submit(Runnable task) {
+        if (task == null) throw new NullPointerException();
+        RunnableFuture<Void> ftask = newTaskFor(task, null);
+        execute(ftask);
+        return ftask;
+    }
 ```
 ## 拒绝策略
 * ThreadPoolExecutor.AbortPolicy()  终止策略，线程池会抛出异常并终止执行，它是默认的拒绝策略
