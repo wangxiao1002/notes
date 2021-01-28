@@ -1,0 +1,9 @@
+spring:
+  r2dbc:
+    password: asdfg12345
+    url: r2dbcs:mysql://192.168.1.198:3307/luojigou_data_panel
+    username: root
+    name: luojigou_data_panel
+    properties:
+      DRIVER : mysql
+      SSL: true

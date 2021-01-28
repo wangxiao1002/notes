@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: DataPanelAppplication
+  profiles:
+    active: pro
+server:
+  port: 39092
+
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        data:
+          r2dbc: debug
+
+
+
+
+
+
+
+
+
+
+
+
+
