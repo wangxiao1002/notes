@@ -1,0 +1,8 @@
+spring:
+  application:
+    name:  esDemoApplication
+
+server:
+  port: 38080
+
+
