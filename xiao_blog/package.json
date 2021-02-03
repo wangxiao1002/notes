@@ -1,0 +1,23 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "author": "zeal",
+  "scripts": {
+    "dev": "vuepress dev .",
+    "build": "vuepress build .",
+    "upcdn": "vuepress build . && node ./scripts/upcdn.js"
+  },
+  "devDependencies": {
+    "glob": "^7.1.6",
+    "mime": "^2.4.4",
+    "path": "^0.12.7",
+    "qiniu": "^7.3.0",
+    "vuepress": "^1.7.1",
+    "vuepress-theme-reco": "1.5.5"
+  },
+  "dependencies": {
+    "aos": "^2.3.4",
+    "vue-class-component": "^7.2.3"
+  },
+  "description": "blog for zeal"
+}
