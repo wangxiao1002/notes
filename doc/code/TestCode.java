@@ -11,7 +11,7 @@ import java.util.Objects;
 public class TestCode {
 
     public static void main(String[] args) {
-       
+
 
     }
 
@@ -99,7 +99,7 @@ public class TestCode {
     }
 
     /**
-     *  单向链表反转 需要构造三个元素  prev、curr 和 next
+     *  单向链表反转 需要构造三个元素  prev (上一次交换)、curr（当前） 和 next
      *  while(curr){
      *     next = curr.next;
      *     curr.next = prev；
@@ -123,12 +123,66 @@ public class TestCode {
     }
 
 
-    
+    /**
+     *  奇数个 找中间值  快慢指针
+     * @author wangxiao
+     * @date 16:00 2021/3/2
+     * @param oldHead 头
+     * @return com.example.demo.doc.code.TestCode.Node<java.lang.Integer>
+     */
+    public static Node<Integer> findMedian(Node<Integer> oldHead) {
+
+        Node<Integer> fast = oldHead;
+        Node<Integer> slow = oldHead;
+
+        while(null != fast && null != fast.nextNode && null !=  fast.nextNode.nextNode){
+
+            fast = fast.nextNode.nextNode;
+
+            slow = slow.nextNode;
+
+        }
+        System.out.println(slow.value);
+        return slow;
+
+
+    }
 
 
 
 
+    /**
+     *  奇数个 找中间值  循环暴力
+     * @author wangxiao
+     * @date 16:00 2021/3/2
+     * @param oldHead 头
+     * @return com.example.demo.doc.code.TestCode.Node<java.lang.Integer>
+     */
+    public static Node<Integer> findMedianFor(Node<Integer> oldHead) {
 
+        //  暴力解法
+
+        int index = 0;
+        Node<Integer> curr = oldHead,next = null;
+        while (null != curr) {
+            next = curr.nextNode;
+            curr = next;
+            index ++;
+        }
+        int  targetIndex = (index/2);
+        index =0;
+        Node<Integer> curr1 = oldHead,next1 = null;
+        while (null != curr1) {
+            next1 = curr1.nextNode;
+            curr1 = next1;
+            index ++;
+            if (targetIndex == index ) {
+                System.out.println(curr1.value);
+                return curr;
+            }
+        }
+        return curr;
+    }
 
 
 }
