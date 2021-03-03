@@ -72,3 +72,91 @@ public final class MappedStatement {
     private String[] resultSets;
 }   
 ```
+
+Mapper 接口的存储与实现
+在平常我们写的 SSM 框架中, 定义了 Mapper 接口与 .xml 对应的 SQL 文件, 在 Service 层直接注入 xxxMapper 就可以了
+也没有看到像 JDBC 操作数据库的操作, Mybatis 在中间是如何为我们省略下这些重复繁琐的操作呢
+这里使用 Mybatis 源码中的测试类进行验证, 首先定义 Mapper 接口, 省事直接注解定义 SQL
+
+这里使用 SqlSession 来获取 Mapper 操作数据库, 测试方法如下
+
+创建 SqlSession
+#1 从 SqlSessionFactory 中打开一个 新的 SqlSession
+获取 Mapper 实例
+#2 就存在一个疑问点, 定义的 AutoConstructorMapper 明明是个接口, 为什么可以实例化为对象?
+动态代理方法调用
+#3 通过创建的对象调用类中具体的方法, 这里具体聊一下 #2 操作
+SqlSession 是一个接口, 有一个 默认的实现类 DefaultSqlSession, 类中包含了 Configuration 属性
+Mapper 接口的信息以及 .xml 中 SQL 语句是在 Mybatis 初始化时添加 到 Configuration 的 MapperRegistry 属性中的
+
+#2 中的 getMapper 就是从 MapperRegistry 中获取 Mapper
+看一下 MapperRegistry 的类属性都有什么
+
+config 为 保持全局唯一 的 Configuration 对象引用
+knownMappers 中 Key-Class 是 Mapper 对象, Value-MapperProxyFactory 是通过 Mapper 对象衍生出的 Mapper 代理工厂
+再看一下 MapperProxyFactory 类的结构信息
+
+mapperInterface 属性是 Mapper 对象的引用, methodCache 的 key 是 Mapper 中的方法, value 是 Mapper 解析对应 SQL 产生的 MapperMethod
+
+📖 Mybatis 设计 methodCache 属性时使用到了 懒加载机制, 在初始化时不会增加对应 Method, 而是在 第一次调用时新增
+
+
+MapperMethod 运行时数据如下, 比较容易理解
+
+通过一个实际例子帮忙理解一下 MapperRegistry 类关系, Mapper 初始化第一次调用的对象状态, 可以看到 methodCache 容量为0
+
+我们目前已经知道 MapperRegistry 的类关系, 回头继续看一下第二步的 MapperRegistry#getMapper() 处理步骤
+
+核心处理在 MapperProxyFactory#newInstance() 方法中, 继续跟进
+
+MapperProxy 继承了 InvocationHandler 接口, 通过 newInstance() 最终返回的是由 Java Proxy 动态代理返回的动态代理实现类
+看到这里就清楚了步骤二中接口为什么能够被实例化, 返回的是 接口的动态代理实现类
+Mybatis Sql 的执行过程
+根据 Mybatis SQL 执行流程图进一步了解
+
+大致可以分为以下几步操作:
+
+📖 在前面的内容中, 知道了 Mybatis Mapper 是动态代理的实现, 查看 SQL 执行过程, 就需要紧跟实现了 InvocationHandler 的 MapperProxy 类
+
+执行增删改查
+@Select(" SELECT * FROM SUBJECT WHERE ID = #{id}")
+PrimitiveSubject getSubject(@Param("id") final int id);
+复制代码
+我们以上述方法举例, 调用方通过 SqlSession 获取 Mapper 动态代理对象, 执行 Mapper 方法时会通过 InvocationHandler 进行代理
+
+在 MapperMethod#execute 中, 根据 MapperMethod -> SqlCommand -> SqlCommandType 来确定增、删、改、查方法
+
+📖 SqlCommandType 是一个枚举类型, 对应五种类型 UNKNOWN、INSERT、UPDATE、DELETE、SELECT、FLUSH
+
+
+参数处理
+查询操作对应 SELECT 枚举值, if else 中判断为返回值是否集合、无返回值、单条查询等, 这里以查询单条记录作为入口
+Object param = method.convertArgsToSqlCommandParam(args);
+result = sqlSession.selectOne(command.getName(), param);
+复制代码
+
+
+
+📖 这里能够解释一个之前困扰我的问题, 那就是为什么方法入参只有单个 @Param("id"), 但是参数 param 对象会存在两个键值对
+
+继续查看 SqlSession#selectOne 方法, sqlSession 是一个接口, 具体还是要看实现类 DefaultSqlSession
+
+因为单条和查询多条以及分页查询都是走的一个方法, 所以在查询的过程中, 会将分页的参数进行添加
+
+执行器处理
+在 Mybatis 源码中, 创建的执行器默认是 CachingExecutor, 使用了装饰者模式, 在类中保持了 Executor 接口的引用, CachingExecutor 在持有的执行器基础上增加了缓存的功能
+
+delegate.query 就是在具体的执行器了, 默认 SimpleExecutor, query 方法统一在抽象父类 BaseExecutor 中维护
+
+BaseExecutor#queryFromDatabase 方法执行了缓存占位符以及执行具体方法, 并将查询返回数据添加至缓存
+
+BaseExecutor#doQuery 方法是由具体的 SimpleExecutor 实现
+
+执行 SQL
+因为我们 SQL 中使用了参数占位符, 使用的是 PreparedStatementHandler 对象, 执行预编译SQL的 Handler, 实际使用 PreparedStatement 进行 SQL 调用
+
+返回数据解析
+将 JDBC 返回类型转换为 Java 类型, 根据 resultSets 和 resultMap 进行转换
+
+
+
