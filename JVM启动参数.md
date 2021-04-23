@@ -8,7 +8,7 @@ JVM 启动中 一般会添加一些参数来指定信息 比如 堆大小  原�
 ## 错误信息收集
  -XX:+HeapDumpOnOutOfMemoryError OOM 错误
  -XX:HeapDumpPath=*/java.hprof  保存dump 
- -XX:ErrorFile=/var/log/hs_err_pid<pid>.log  JDK错误日志保存地方，这个文件的内容他主要有如下内容
+ -XX:ErrorFile=/var/log/hs_err_pid<pid>.log  JDK错误日志保存地方，这个文件的内容他主要有如下内容，默认在工作空间下下面 名称为hs_err_pid_xxx.log
 
 日志头文件
 导致 crash 的线程信息
