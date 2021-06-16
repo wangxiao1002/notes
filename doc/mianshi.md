@@ -1,4 +1,4 @@
-
+#Java 面试
 谈谈你对Java平台的理解？“Java是解释执行”，这句话正确吗？
 典型回答
 Java本身是一种面向对象的语言，最显著的特性有两个方面，一是所谓的“书写一次，到处运行”（Write once, run anywhere），能够非常容易地获得跨平台能力；另外就是垃圾收集（GC, Garbage Collection），Java通过垃圾收集器（Garbage Collector）回收分配内存，大部分情况下，程序员不需要自己操心内存的分配和回收。
