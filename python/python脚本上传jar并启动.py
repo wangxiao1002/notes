@@ -53,5 +53,4 @@ chan.send(cmd)
 time.sleep(1)
 # 关闭连接
 ssh.close()
-
 print("SUCCESS")
